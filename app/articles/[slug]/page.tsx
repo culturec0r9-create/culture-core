@@ -1,34 +1,37 @@
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { getAllPosts } from "@/lib/posts";
-import { notFound } from "next/navigation";
+import { slugify } from "@/lib/slugify";
 
-type Props = {
-  params: Promise<{ category: string }>;
-};
-
-export default async function CategoryPage({ params }: Props) {
-  const { category } = await params;
-
+export default function Home() {
   const posts = getAllPosts();
 
-  const filtered = posts.filter(
-    (post) => post.category.toLowerCase() === category.toLowerCase()
+  const allTags = Array.from(
+    new Set(posts.flatMap((post) => post.tags ?? []))
   );
-
-  if (filtered.length === 0) return notFound();
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <Header />
 
       <section className="mx-auto max-w-5xl px-4 py-10">
-        <h1 className="text-2xl font-bold mb-8 uppercase">
-          {category}
-        </h1>
+        <div className="mb-10">
+          <h1 className="text-3xl font-bold">culture core</h1>
+          <p className="mt-2 text-sm text-slate-500">
+            ストリート、K-POP、ファッションを深掘るオンラインメディア
+          </p>
+        </div>
+
+        <div className="mb-6 flex gap-3 text-sm text-blue-600">
+          {allTags.map((tag) => (
+            <Link key={tag} href={`/tags/${slugify(tag)}`}>
+              #{tag}
+            </Link>
+          ))}
+        </div>
 
         <div className="space-y-8">
-          {filtered.map((post) => (
+          {posts.map((post) => (
             <article
               key={post.slug}
               className="border-b border-slate-200 pb-6"
@@ -38,7 +41,7 @@ export default async function CategoryPage({ params }: Props) {
               </div>
 
               <Link href={`/articles/${post.slug}`}>
-                <h2 className="text-xl font-semibold mt-1 hover:underline">
+                <h2 className="mt-1 text-xl font-semibold hover:underline">
                   {post.title}
                 </h2>
               </Link>
