@@ -62,3 +62,23 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     contentHtml,
   };
 }
+
+export function getAllTags() {
+  const posts = getAllPosts();
+
+  const tagMap = new Map<string, number>();
+
+  posts.forEach((post) => {
+    post.tags.forEach((tag) => {
+      const normalizedTag = tag;
+      tagMap.set(normalizedTag, (tagMap.get(normalizedTag) ?? 0) + 1);
+    });
+  });
+
+  return Array.from(tagMap.entries())
+    .map(([tag, count]) => ({
+      tag,
+      count,
+    }))
+    .sort((a, b) => a.tag.localeCompare(b.tag));
+}
