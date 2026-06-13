@@ -11,7 +11,7 @@ type Props = {
 export function ArticleCard({ post, large = false }: Props) {
   return (
     <article
-      className={`group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md ${
+      className={`overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md ${
         large ? "md:grid md:grid-cols-2 md:gap-6" : ""
       }`}
     >
@@ -34,19 +34,23 @@ export function ArticleCard({ post, large = false }: Props) {
           <time>{post.date}</time>
         </div>
 
-        <Link href={`/articles/${post.slug}`}>
+        <Link href={`/articles/${post.slug}`} className="inline-block">
           <h2
-            className={`font-semibold leading-snug group-hover:underline ${
+            className={`font-semibold leading-snug hover:underline underline-offset-4 ${
               large ? "text-xl md:text-2xl" : "text-lg"
             }`}
           >
-    {post.title}
-  </h2>
-</Link>
+            {post.title}
+          </h2>
+        </Link>
 
         <div className="flex flex-wrap gap-2 text-xs text-blue-600">
           {post.tags.map((tag) => (
-            <Link key={tag} href={`/tags/${slugify(tag)}`}>
+            <Link
+              key={tag}
+              href={`/tags/${slugify(tag)}`}
+              className="hover:underline underline-offset-4"
+            >
               #{tag}
             </Link>
           ))}
