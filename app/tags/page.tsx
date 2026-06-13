@@ -1,10 +1,9 @@
-import Link from "next/link";
 import { Header } from "@/components/Header";
-import { getAllTags } from "@/lib/posts";
-import { slugify } from "@/lib/slugify";
+import { getAllPosts } from "@/lib/posts";
+import { ArticleCard } from "@/components/ArticleCard";
 
-export default function TagsPage() {
-  const tags = getAllTags();
+export default function Home() {
+  const posts = getAllPosts();
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
@@ -12,21 +11,22 @@ export default function TagsPage() {
 
       <section className="mx-auto max-w-5xl px-4 py-10">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold">Tags</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+            Online Magazine
+          </p>
+
+          <h1 className="mt-2 text-3xl font-bold tracking-tight">
+            culture core
+          </h1>
+
           <p className="mt-2 text-sm text-slate-500">
-            記事に付いているタグの一覧です。
+            ストリート、K-POP、ファッションを深掘るオンラインメディア
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          {tags.map(({ tag, count }) => (
-            <Link
-              key={tag}
-              href={`/tags/${slugify(tag)}`}
-              className="rounded-full border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100"
-            >
-              #{tag} <span className="text-slate-400">({count})</span>
-            </Link>
+        <div className="space-y-8">
+          {posts.map((post) => (
+            <ArticleCard key={post.slug} post={post} />
           ))}
         </div>
       </section>

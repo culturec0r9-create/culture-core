@@ -1,8 +1,9 @@
 ---
 title: "cortisはなぜファッションアイコンなのか"
-date: "2025-11-28"
+date: "2025-12-28"
 category: "K-POP"
-tags: ["cortis", "fashion", "street"]
+tags: ["Cortis", "Fashion", "Street"]
+image: "/images/cortis-cover.JPG"
 ---
 
 # 序論
@@ -13,10 +14,9 @@ K-POPグループであり、同時にアーティストとしても活動する
 
 cortisは音楽だけでなく、そのスタイルでも強い存在感を放っている。
 
----
-
 ## cortisとは
 
 cortisは、近年K-POPシーンに登場したボーイズグループである。
-
 音楽活動と同時に強いビジュアル性とスタイル性でも注目を集めている存在である。
+
+![CORTISのスタイリング](/images/cortis-styling-1.jpg)

@@ -1,54 +1,70 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { slugify } from "@/lib/slugify";
 
-export default function Home() {
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export function generateStaticParams() {
   const posts = getAllPosts();
 
-  const allTags = Array.from(
-    new Set(posts.flatMap((post) => post.tags ?? []))
-  );
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default async function ArticlePage({ params }: Props) {
+  const { slug } = await params;
+
+  const posts = getAllPosts();
+  const exists = posts.some((post) => post.slug === slug);
+
+  if (!exists) {
+    notFound();
+  }
+
+  const post = await getPostBySlug(slug);
 
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <Header />
 
-      <section className="mx-auto max-w-5xl px-4 py-10">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold">culture core</h1>
-          <p className="mt-2 text-sm text-slate-500">
-            ストリート、K-POP、ファッションを深掘るオンラインメディア
-          </p>
-        </div>
+      <article className="mx-auto max-w-3xl px-4 py-10">
+        <div className="mb-8">
+          <Link
+            href={`/categories/${slugify(post.category)}`}
+            className="text-xs uppercase tracking-[0.2em] text-slate-500 hover:underline"
+          >
+            {post.category}
+          </Link>
 
-        <div className="mb-6 flex gap-3 text-sm text-blue-600">
-          {allTags.map((tag) => (
-            <Link key={tag} href={`/tags/${slugify(tag)}`}>
-              #{tag}
-            </Link>
-          ))}
-        </div>
+          <h1 className="mt-3 text-3xl font-bold leading-tight">
+            {post.title}
+          </h1>
 
-        <div className="space-y-8">
-          {posts.map((post) => (
-            <article
-              key={post.slug}
-              className="border-b border-slate-200 pb-6"
-            >
-              <div className="text-xs text-slate-500">
-                {post.category} ・ {post.date}
-              </div>
+          <p className="mt-3 text-sm text-slate-500">{post.date}</p>
 
-              <Link href={`/articles/${post.slug}`}>
-                <h2 className="mt-1 text-xl font-semibold hover:underline">
-                  {post.title}
-                </h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <Link
+                key={tag}
+                href={`/tags/${slugify(tag)}`}
+                className="text-xs text-slate-500 hover:underline"
+              >
+                #{tag}
               </Link>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
-      </section>
+
+        <div
+          className="prose prose-slate max-w-none"
+          dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+        />
+      </article>
     </main>
   );
 }
